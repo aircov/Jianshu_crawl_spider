@@ -1,2 +1,6 @@
 # Jianshu_crawl_spider
-scrapy crawl spider
+
+The whole website data will be seved to MySQL.
+
+Using  redis improvement on unrepeated tactics of URL of distributed spider .
+
