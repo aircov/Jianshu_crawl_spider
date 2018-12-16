@@ -53,7 +53,7 @@ class JianshuTwistedPipeline(object):
             'password': 'mysql123',
             'database': 'jianshu',
             'charset': 'utf8',
-            'cursorclass': pymysql.cursors.DictCursor
+            'cursorclass': pymysql.cursors.DictCursor   # cursor类
         }
         self.dbpool = adbapi.ConnectionPool('pymysql', **dbparams)
         self._sql = None
