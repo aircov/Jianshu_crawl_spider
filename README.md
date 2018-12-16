@@ -1,6 +1,11 @@
 # Jianshu_crawl_spider
 
-The whole website data will be seved to MySQL.
+The whole website data will be downloaded to MySQL.
 
-Using  redis improvement on unrepeated tactics of URL of distributed spider .
+实现以下功能：
 
+* url去重
+* 断点续传
+* 增量爬取
+
+`更改crawlspider 为 Rediscrawlspider 可以实现分布式爬虫`
