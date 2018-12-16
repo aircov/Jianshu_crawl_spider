@@ -4,8 +4,11 @@
 #
 # See documentation in:
 # https://doc.scrapy.org/en/latest/topics/spider-middleware.html
+import time
 
 from scrapy import signals
+from scrapy.http import HtmlResponse
+from selenium import webdriver
 
 
 class JianshuSpiderMiddleware(object):
@@ -101,3 +104,27 @@ class JianshuDownloaderMiddleware(object):
 
     def spider_opened(self, spider):
         spider.logger.info('Spider opened: %s' % spider.name)
+
+
+class SeleniumDownloadMiddleware(object):
+    def __init__(self):
+        self.driver = webdriver.Chrome()
+
+    def process_request(self, request, spider):
+        self.driver.get(request.url)
+        time.sleep(1)
+
+        try:
+            while True:
+                showmore = self.driver.find_element_by_class_name('show-more')
+                showmore.click()
+                time.sleep(0.3)
+                if not showmore:
+                    break
+        except:
+            pass
+
+        # 获得网页源代码，异步，需要延迟    阅读、评论、喜欢三个字段ajax请求，在网页中直接通过xpath不可
+        source = self.driver.page_source
+        response = HtmlResponse(url=self.driver.current_url, body=source, request=request, encoding="utf-8")
+        return response

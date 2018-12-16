@@ -8,7 +8,43 @@ import pymysql
 from twisted.enterprise import adbapi
 
 
-class JianshuPipeline(object):
+# 同步（默认）
+class JianshuSpiderPipeline(object):
+    def __init__(self):
+        dbparams = {
+            'host': '127.0.0.1',
+            'port': 3306,
+            'user': 'root',
+            'password': 'mysql123',
+            'database': 'jianshu',
+            'charset': 'utf8'
+        }
+        self.conn = pymysql.connect(**dbparams)
+        self.cursor = self.conn.cursor()
+        self._sql = None
+
+    def process_item(self, item, spider):
+        self.cursor.execute(self.sql,
+                            (item['title'], item['content'], item['article_id'], item['origin_url'], item['author'],
+                             item['avatar'], item['pub_time'], item['word_count'], item['view_count'],
+                             item['comment_count'], item['like_count'], item['subjects']))
+        self.conn.commit()
+        return item
+
+    @property
+    def sql(self):
+        if not self._sql:
+            self._sql = """
+            insert into articles(id,title,content,article_id,origin_url,author,avatar,pub_time,word_count,view_count,comment_count,like_count,subjects)
+            values (null, %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
+            """
+            return self._sql
+        return self._sql
+
+
+# 异步保存到数据库（基于twisted）
+
+class JianshuTwistedPipeline(object):
     def __init__(self):
         dbparams = {
             'host': '127.0.0.1',

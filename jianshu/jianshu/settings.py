@@ -14,6 +14,7 @@ BOT_NAME = 'jianshu'
 SPIDER_MODULES = ['jianshu.spiders']
 NEWSPIDER_MODULE = 'jianshu.spiders'
 
+# LOG_LEVEL = "WARNING"
 
 # 确保所有爬虫共享相同的去重指纹
 DUPEFILTER_CLASS = "scrapy_redis.dupefilter.RFPDupeFilter"
@@ -63,9 +64,10 @@ DEFAULT_REQUEST_HEADERS = {
 
 # Enable or disable downloader middlewares
 # See https://doc.scrapy.org/en/latest/topics/downloader-middleware.html
-#DOWNLOADER_MIDDLEWARES = {
-#    'jianshu.middlewares.JianshuDownloaderMiddleware': 543,
-#}
+DOWNLOADER_MIDDLEWARES = {
+   # 'jianshu.middlewares.JianshuDownloaderMiddleware': 543,
+   'jianshu.middlewares.SeleniumDownloadMiddleware': 542,
+}
 
 # Enable or disable extensions
 # See https://doc.scrapy.org/en/latest/topics/extensions.html
@@ -76,7 +78,8 @@ DEFAULT_REQUEST_HEADERS = {
 # Configure item pipelines
 # See https://doc.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
-   'jianshu.pipelines.JianshuPipeline': 300,
+   # 'jianshu.pipelines.JianshuSpiderPipeline': 300,
+   'jianshu.pipelines.JianshuTwistedPipeline': 300,
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)
